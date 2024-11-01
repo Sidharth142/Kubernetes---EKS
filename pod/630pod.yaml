@@ -1,1 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testpod
+  namespace: 630project
+  labels:
+    app: web
+    env: dev
+spec:
+  containers:
+    - name: testcon
+      image: sidhu142/web1:v1
+      imagePullPolicy:  IfNotPresent
+      ports:
+      - name: http
+        containerPort: 80
+        protocol: TCP
+      resources:
+        requests:
+          memory: "200Mi"
+          cpu: "250m"
+        limits:
+          memory: "300Mi"
+          cpu: "400m"
+  restartPolicy: OnFailure
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websvc
+  namespace: 630project
+spec:
+  type: NodePort
+  ports:
+  - name: apache
+    nodePort: 30002
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:        #mapping to pod
+    app: web
+    env: dev
+
+
+
+
 
